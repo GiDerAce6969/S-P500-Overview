@@ -1,8 +1,8 @@
 # Real-Time S&P 500 Stock Analysis Pipeline
 
-[![View Live Dashboard](https://img.shields.io/badge/View-Live_Dashboard-2ea44f?style=for-the-badge)](YOUR_PUBLIC_LOOKER_STUDIO_LINK_HERE)
+[![View Live Dashboard](https://img.shields.io/badge/View-Live_Dashboard-2ea44f?style=for-the-badge)]([YOUR_PUBLIC_LOOKER_STUDIO_LINK_HERE](https://lookerstudio.google.com/u/0/reporting/d5c939cb-83c9-407e-9647-22715763a277/page/DxKbF/edit))
 
-![Screenshot of your final Looker Studio Dashboard](URL_TO_YOUR_DASHBOARD_SCREENSHOT)
+
 
 ## 📄 Summary
 
@@ -47,23 +47,3 @@ The interactive dashboard includes:
 
 ---
 
-## ⚙️ How to Run Locally
-
-1.  **Prerequisites:** A Google Cloud Platform account with a configured service account key.
-2.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-username/your-repo-name.git
-    cd your-repo-name
-    ```
-3.  **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-4.  **Configure:**
-    - Place your GCP service account `key.json` file in the root directory.
-    - Update the `project_id` and `table_id` variables in `extract_data.py`.
-5.  **Run the ETL script:**
-    ```bash
-    python extract_data.py
-    ```
-6.  Connect Looker Studio to your new BigQuery table to build the dashboard.
