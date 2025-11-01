@@ -30,7 +30,8 @@ def get_stock_data(ticker, start_date, end_date):
     Downloads historical stock data from Yahoo Finance.
     """
     try:
-        data = yf.download(ticker, start=start_date, end=end_date)
+        # Added auto_adjust=True to handle stock splits/dividends and silence the warning
+        data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True)
         if data.empty:
             st.warning(f"No data found for {ticker}. It might be a delisted stock or an error.")
             return pd.DataFrame()
@@ -69,24 +70,24 @@ if selected_ticker:
         latest_data = data.iloc[-1]
         
         col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Last Close Price", f"${latest_data['Close']:.2f}")
-        col2.metric("50-Day Moving Avg", f"${latest_data['Moving_Avg_50']:.2f}")
-        col3.metric("Latest Volume", f"{latest_data['Volume']:,.0f}")
-        col4.metric("Daily Return", f"{latest_data['Daily_Return']:.2%}")
+        
+        # --- FIX IS HERE: Explicitly cast values to float/int before formatting ---
+        col1.metric("Last Close Price", f"${float(latest_data['Close']):.2f}")
+        col2.metric("50-Day Moving Avg", f"${float(latest_data['Moving_Avg_50']):.2f}")
+        col3.metric("Latest Volume", f"{int(latest_data['Volume']):,}")
+        col4.metric("Daily Return", f"{float(latest_data['Daily_Return']):.2%}")
 
         # --- Visualizations ---
         st.subheader("Price Chart")
         
         # Create the plot
+        # Note: With auto_adjust=True, yfinance provides only 'Close' column, not OHL.
+        # We will switch from Candlestick to a simple Line chart.
         fig = go.Figure()
-        fig.add_trace(go.Candlestick(x=data.index,
-                        open=data['Open'],
-                        high=data['High'],
-                        low=data['Low'],
-                        close=data['Close'], name='Price'))
+        fig.add_trace(go.Scatter(x=data.index, y=data['Close'], mode='lines', name='Close Price'))
         
         fig.add_trace(go.Scatter(x=data.index, y=data['Moving_Avg_50'], 
-                                 mode='lines', name='50-Day MA', line=dict(color='orange', width=1)))
+                                 mode='lines', name='50-Day MA', line=dict(color='orange', width=1, dash='dot')))
 
         fig.update_layout(
             title=f'{selected_ticker} Stock Price',
